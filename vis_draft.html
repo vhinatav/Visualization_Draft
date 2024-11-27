@@ -68,20 +68,22 @@
             vegaEmbed('#social-media-use', platformSpec).catch(console.error);
         });
 
-        d3.csv('dailytimespent.csv').then(data => {
+        d3.csv('textilewaste.csv').then(data => {
             data.forEach(d => {
-                d.time = +d.time;
+                d.generation = +d.generation;
             });
             const salesByPlatformSpec = {
                 "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-                "title": "Environmental Issue",
+                "title": "Textile Waste Generation",
                 "data": { "values": data },
-                "mark": "arc",
+                "mark": { "type": "line", "color": "#cca86b", 
+                            "point": {"filled": true, "fill": "#7b3f61",}
+                        },
                 "width": 800,
                 "encoding": {
-                    "theta": { "field": "sales_amount", "aggregate": "sum" },
-                    "color": { "field": "platform", "type": "nominal", "title": "Platform" },
-                    "tooltip": { "field": "platform", "type": "nominal" }
+                    "x": { "field": "year", "type": "ordinal", "title": "Year", "axis": { "labelAngle": 0 } },
+                    "y": { "field": "generation", "type": "quantitative", "aggregate": "sum", "title": "Amount (in tons)" },
+                    "tooltip": { "field": "generation", "type": "quantitative", "aggregate": "sum" }
                 }
             };
             vegaEmbed('#environmental-issue', salesByPlatformSpec).catch(console.error);
